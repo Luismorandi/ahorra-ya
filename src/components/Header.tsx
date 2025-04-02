@@ -3,19 +3,25 @@ import React, { useState } from 'react';
 import { DollarSign } from 'lucide-react';
 import { useFinance } from '@/contexts/FinanceContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Header = () => {
   const { calculateSavings, currencies } = useFinance();
   const [displayCurrency, setDisplayCurrency] = useState('USD');
+  const isMobile = useIsMobile();
   
   const savings = calculateSavings(displayCurrency);
   
   return (
     <header className="bg-white shadow-sm">
       <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center mb-4 md:mb-0">
-          <DollarSign className="w-8 h-8 mr-2 text-finance-blue" />
-          <h1 className="text-2xl font-bold text-gray-800">Ahorro en Dólares Fácil</h1>
+        <div className="flex items-center justify-between mb-4 md:mb-0">
+          <div className="flex items-center">
+            <DollarSign className="w-8 h-8 mr-2 text-finance-blue" />
+            <h1 className="text-xl md:text-2xl font-bold text-gray-800">
+              {isMobile ? 'Ahorro Fácil' : 'Ahorro en Dólares Fácil'}
+            </h1>
+          </div>
         </div>
         <div className="flex items-center">
           <div className="mr-4 w-40">

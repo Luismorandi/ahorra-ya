@@ -10,9 +10,11 @@ import ExpenseListManager from '@/components/ExpenseListManager';
 import ExpenseManager from '@/components/ExpenseManager';
 import IncomeManager from '@/components/IncomeManager';
 import { LayoutGrid, DollarSign, ListChecks, Receipt, Wallet } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const isMobile = useIsMobile();
 
   return (
     <FinanceProvider>
@@ -20,25 +22,25 @@ const Index = () => {
         <Header />
         <main className="flex-grow container mx-auto px-4 py-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-6">
-              <TabsTrigger value="dashboard" className="flex items-center">
-                <LayoutGrid className="w-4 h-4 mr-2" />
+            <TabsList className="grid grid-cols-5 gap-1 mb-6 w-full">
+              <TabsTrigger value="dashboard" className="flex items-center justify-center">
+                <LayoutGrid className="w-4 h-4 md:mr-2" />
                 <span className="hidden md:inline">Dashboard</span>
               </TabsTrigger>
-              <TabsTrigger value="currencies" className="flex items-center">
-                <DollarSign className="w-4 h-4 mr-2" />
+              <TabsTrigger value="currencies" className="flex items-center justify-center">
+                <DollarSign className="w-4 h-4 md:mr-2" />
                 <span className="hidden md:inline">Monedas</span>
               </TabsTrigger>
-              <TabsTrigger value="expenseLists" className="flex items-center">
-                <ListChecks className="w-4 h-4 mr-2" />
+              <TabsTrigger value="expenseLists" className="flex items-center justify-center">
+                <ListChecks className="w-4 h-4 md:mr-2" />
                 <span className="hidden md:inline">Listas</span>
               </TabsTrigger>
-              <TabsTrigger value="expenses" className="flex items-center">
-                <Receipt className="w-4 h-4 mr-2" />
+              <TabsTrigger value="expenses" className="flex items-center justify-center">
+                <Receipt className="w-4 h-4 md:mr-2" />
                 <span className="hidden md:inline">Gastos</span>
               </TabsTrigger>
-              <TabsTrigger value="incomes" className="flex items-center">
-                <Wallet className="w-4 h-4 mr-2" />
+              <TabsTrigger value="incomes" className="flex items-center justify-center">
+                <Wallet className="w-4 h-4 md:mr-2" />
                 <span className="hidden md:inline">Ingresos</span>
               </TabsTrigger>
             </TabsList>
