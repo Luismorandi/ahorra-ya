@@ -45,9 +45,18 @@ type FinanceContextType = {
   addIncome: (income: Omit<Income, "id">) => void;
   updateIncome: (id: string, data: Partial<Income>) => void;
   deleteIncome: (id: string) => void;
-  calculateExpenseTotals: () => { totalInUSD: number; byCurrency: Record<string, number> };
-  calculateIncomeTotals: () => { totalInUSD: number; byCurrency: Record<string, number> };
-  calculateSavings: () => number;
+  calculateExpenseTotals: (targetCurrency?: string) => { 
+    total: number; 
+    byCurrency: Record<string, number>;
+    targetCurrency: string;
+  };
+  calculateIncomeTotals: (targetCurrency?: string) => { 
+    total: number; 
+    byCurrency: Record<string, number>;
+    targetCurrency: string;
+  };
+  calculateSavings: (targetCurrency?: string) => number;
+  convertAmount: (amount: number, fromCurrency: string, toCurrency: string) => number;
 };
 
 const defaultCurrencies: Currency[] = [
@@ -176,15 +185,24 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   // Calculation functions
-  const convertToUSD = (amount: number, currencyCode: string): number => {
-    const currency = currencies.find((c) => c.code === currencyCode);
-    if (!currency) return amount; // Default to no conversion if currency not found
-    return amount * currency.conversionRate;
+  const convertAmount = (amount: number, fromCurrency: string, toCurrency: string): number => {
+    if (fromCurrency === toCurrency) return amount;
+    
+    const fromCurrencyObj = currencies.find((c) => c.code === fromCurrency);
+    const toCurrencyObj = currencies.find((c) => c.code === toCurrency);
+    
+    if (!fromCurrencyObj || !toCurrencyObj) return amount;
+    
+    // Convert to USD first (as intermediate currency)
+    const amountInUSD = amount * fromCurrencyObj.conversionRate;
+    
+    // Then convert from USD to target currency
+    return amountInUSD / toCurrencyObj.conversionRate;
   };
 
-  const calculateExpenseTotals = () => {
+  const calculateExpenseTotals = (targetCurrency: string = 'USD') => {
     const byCurrency: Record<string, number> = {};
-    let totalInUSD = 0;
+    let total = 0;
 
     expenseLists.forEach((list) => {
       list.expenses.forEach((expense) => {
@@ -194,17 +212,17 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
         byCurrency[expense.currency] += expense.amount;
 
-        // Add to USD total
-        totalInUSD += convertToUSD(expense.amount, expense.currency);
+        // Add to total in target currency
+        total += convertAmount(expense.amount, expense.currency, targetCurrency);
       });
     });
 
-    return { totalInUSD, byCurrency };
+    return { total, byCurrency, targetCurrency };
   };
 
-  const calculateIncomeTotals = () => {
+  const calculateIncomeTotals = (targetCurrency: string = 'USD') => {
     const byCurrency: Record<string, number> = {};
-    let totalInUSD = 0;
+    let total = 0;
 
     incomes.forEach((income) => {
       // Add to currency totals
@@ -213,17 +231,17 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
       byCurrency[income.currency] += income.amount;
 
-      // Add to USD total
-      totalInUSD += convertToUSD(income.amount, income.currency);
+      // Add to total in target currency
+      total += convertAmount(income.amount, income.currency, targetCurrency);
     });
 
-    return { totalInUSD, byCurrency };
+    return { total, byCurrency, targetCurrency };
   };
 
-  const calculateSavings = () => {
-    const incomeTotals = calculateIncomeTotals();
-    const expenseTotals = calculateExpenseTotals();
-    return incomeTotals.totalInUSD - expenseTotals.totalInUSD;
+  const calculateSavings = (targetCurrency: string = 'USD') => {
+    const incomeTotals = calculateIncomeTotals(targetCurrency);
+    const expenseTotals = calculateExpenseTotals(targetCurrency);
+    return incomeTotals.total - expenseTotals.total;
   };
 
   return (
@@ -247,6 +265,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         calculateExpenseTotals,
         calculateIncomeTotals,
         calculateSavings,
+        convertAmount,
       }}
     >
       {children}
