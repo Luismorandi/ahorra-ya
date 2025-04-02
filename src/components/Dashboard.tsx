@@ -6,6 +6,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
 import { DollarSign, TrendingUp, TrendingDown } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import ResetDataButton from './ResetDataButton';
 
 const Dashboard = () => {
   const { calculateExpenseTotals, calculateIncomeTotals, calculateSavings, expenseLists, currencies } = useFinance();
@@ -41,7 +42,9 @@ const Dashboard = () => {
   
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
+      <div className="flex justify-between items-center">
+        <ResetDataButton type="all" className="ml-0" />
+        
         <div className="w-48">
           <Label htmlFor="display-currency" className="mb-1 block">Mostrar en moneda:</Label>
           <Select 

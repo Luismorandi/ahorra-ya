@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Edit2, Trash, Plus, ListChecks } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import ResetDataButton from './ResetDataButton';
 
 const ExpenseListManager = () => {
   const { expenseLists, addExpenseList, updateExpenseList, deleteExpenseList } = useFinance();
@@ -75,10 +76,13 @@ const ExpenseListManager = () => {
   return (
     <Card className="w-full mb-6">
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <ListChecks className="w-5 h-5 mr-2" />
-          Listas de Gastos
-        </CardTitle>
+        <div className="flex justify-between items-center">
+          <CardTitle className="flex items-center">
+            <ListChecks className="w-5 h-5 mr-2" />
+            Listas de Gastos
+          </CardTitle>
+          <ResetDataButton type="expenseLists" />
+        </div>
         <CardDescription>
           Organiza tus gastos en diferentes listas (ejemplo: gastos Argentina, gastos Europa, etc)
         </CardDescription>

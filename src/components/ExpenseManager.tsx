@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Edit2, Trash, Plus, DollarSign, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import ResetDataButton from './ResetDataButton';
 
 const ExpenseManager = () => {
   const { expenseLists, currencies, addExpense, updateExpense, deleteExpense } = useFinance();
@@ -135,10 +136,13 @@ const ExpenseManager = () => {
   return (
     <Card className="w-full mb-6">
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <FileText className="w-5 h-5 mr-2" />
-          Administrar Gastos
-        </CardTitle>
+        <div className="flex justify-between items-center">
+          <CardTitle className="flex items-center">
+            <FileText className="w-5 h-5 mr-2" />
+            Administrar Gastos
+          </CardTitle>
+          <ResetDataButton type="expenses" />
+        </div>
         <CardDescription>
           Registra los gastos en las listas que hayas creado
         </CardDescription>
