@@ -4,6 +4,7 @@ import { DollarSign } from 'lucide-react';
 import { useFinance } from '@/contexts/FinanceContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { UserButton } from '@clerk/clerk-react';
 
 const Header = () => {
   const { calculateSavings, currencies } = useFinance();
@@ -41,12 +42,20 @@ const Header = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="bg-gray-50 rounded-lg px-4 py-2 shadow-sm">
+          <div className="bg-gray-50 rounded-lg px-4 py-2 shadow-sm mr-4">
             <div className="text-sm text-gray-500">Ahorro del mes</div>
             <div className={`text-xl font-bold ${savings >= 0 ? 'text-finance-green' : 'text-finance-red'}`}>
               {displayCurrency} {savings.toFixed(2)}
             </div>
           </div>
+          <UserButton 
+            afterSignOutUrl="/sign-in"
+            appearance={{
+              elements: {
+                userButtonAvatarBox: "h-10 w-10"
+              }
+            }}
+          />
         </div>
       </div>
     </header>
